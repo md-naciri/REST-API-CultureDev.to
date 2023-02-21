@@ -21,7 +21,6 @@ class ArticleFactory extends Factory
             'title' => fake()->sentence(3),
             'description' => fake()->sentence(3),
             'content' => fake()->paragraph(3, true),
-            'published_at'=> fake()->dateTime(),
         ];
 
     }

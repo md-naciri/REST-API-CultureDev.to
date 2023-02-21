@@ -87,7 +87,7 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCommentRequest $request, Comment $comment)
+    public function update(StoreCommentRequest $request, Comment $comment)
     {
         $comment->update($request->all());
 
