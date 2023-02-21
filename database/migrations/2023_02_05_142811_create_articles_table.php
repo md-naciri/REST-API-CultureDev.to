@@ -22,9 +22,9 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
-            $table->unsignedBigInteger('tag_id')->nullable();
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('set null');
-            $table->date('published_at')->nullable(false);
+            // $table->unsignedBigInteger('tag_id')->nullable();
+            // $table->foreign('tag_id')->references('id')->on('tags')->onDelete('set null');
+            // $table->date('published_at')->nullable(false);
             $table->timestamps();
         });
     }
