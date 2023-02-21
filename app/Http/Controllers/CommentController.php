@@ -8,6 +8,11 @@ use App\Http\Requests\UpdateCommentRequest;
 
 class CommentController extends Controller
 {
+
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api');
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +20,12 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $comments = Comment::orderBy('id')->get();
+        
+        return response()->json([
+            'status' => 'success',
+            'articles' => $comments
+        ]);
     }
 
     /**
@@ -36,7 +46,12 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        //
+        $comment = Comment::create($request->all());
+        return response()->json([
+            'status' => true,
+            'message' => "Comment Added successfully!",
+            'article' => $comment
+        ], 201);
     }
 
     /**
@@ -47,7 +62,11 @@ class CommentController extends Controller
      */
     public function show(Comment $comment)
     {
-        //
+        $comment->find($comment->id);
+        if (!$comment) {
+            return response()->json(['message' => 'Comment not found'], 404);
+        }
+        return response()->json($comment, 200);
     }
 
     /**
@@ -58,7 +77,7 @@ class CommentController extends Controller
      */
     public function edit(Comment $comment)
     {
-        //
+
     }
 
     /**
@@ -70,7 +89,17 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        //
+        $comment->update($request->all());
+
+        if (!$comment) {
+            return response()->json(['message' => 'Comment not found'], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => "Comment Updated successfully!",
+            'article' => $comment
+        ], 200);
     }
 
     /**
@@ -81,6 +110,17 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        $comment->delete();
+
+        if (!$comment) {
+            return response()->json([
+                'message' => 'Comment not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Comment deleted successfully'
+        ], 200);
     }
 }
