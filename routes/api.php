@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -23,5 +26,10 @@ use App\Http\Controllers\ArticleController;
 //     Route::post('logout', 'logout');
 //     Route::post('refresh', 'refresh');
 // });
+
+Route::apiResource('comments', CommentController::class);
+Route::apiResource('categories', CategoryController::class);
+Route::apiResource('tags', TagController::class);
+
 
 Route::apiResource('articles', ArticleController::class);
