@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreArticleRequest;
 use App\Models\Article;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
+
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api');
+    // }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,17 +21,12 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $articles = Article::orderBy('id')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json([
+            'status' => 'success',
+            'articles' => $articles
+        ]);
     }
 
     /**
@@ -33,9 +35,15 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreArticleRequest $request)
     {
-        //
+        $article = Article::create($request->all());
+
+        return response()->json([
+            'status' => true,
+            'message' => "Article Created successfully!",
+            'article' => $article
+        ], 201);
     }
 
     /**
@@ -46,18 +54,11 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Article  $article
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Article $article)
-    {
-        //
+        $article->find($article->id);
+        if (!$article) {
+            return response()->json(['message' => 'Article not found'], 404);
+        }
+        return response()->json($article, 200);
     }
 
     /**
@@ -67,9 +68,19 @@ class ArticleController extends Controller
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Article $article)
+    public function update(StoreArticleRequest $request, Article $article)
     {
-        //
+        $article->update($request->all());
+
+        if (!$article) {
+            return response()->json(['message' => 'Article not found'], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => "Article Updated successfully!",
+            'article' => $article
+        ], 200);
     }
 
     /**
@@ -80,6 +91,17 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        //
+        $article->delete();
+
+        if (!$article) {
+            return response()->json([
+                'message' => 'Article not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Article deleted successfully'
+        ], 200);
     }
 }
