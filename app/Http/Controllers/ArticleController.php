@@ -6,6 +6,8 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Models\Article;
 use Illuminate\Http\Request;
 
+use App\Filters\ArticlesFilter;
+
 class ArticleController extends Controller
 {
 
@@ -19,14 +21,22 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::orderBy('id')->get();
+        
+        $filter = new ArticlesFilter();
+        $queryItem = $filter->transform($request);
+        if(count($queryItem) == 0){
+            return Article::all();
 
-        return response()->json([
-            'status' => 'success',
-            'articles' => $articles
-        ]);
+        } else {
+            return response()->json([
+                'article' => Article::where($queryItem)->join('categories','categories.id','=','articles.category_id')->get(),
+            ], 200);  //pour afficher nom de categorie
+            
+            
+
+        }
     }
 
     /**
@@ -104,4 +114,6 @@ class ArticleController extends Controller
             'message' => 'Article deleted successfully'
         ], 200);
     }
+
+    
 }

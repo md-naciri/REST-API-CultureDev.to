@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 // use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable Implements JWTSubject
+class User extends Authenticatable 
 {
     use HasFactory, Notifiable;
 
