@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
-use App\Http\Requests\UpdateCommentRequest;
-
 class CommentController extends Controller
 {
 
@@ -62,7 +60,7 @@ class CommentController extends Controller
      */
     public function show(Comment $comment)
     {
-        $comment->find($comment->id);
+        // $comment->find($comment->id);
         if (!$comment) {
             return response()->json(['message' => 'Comment not found'], 404);
         }
