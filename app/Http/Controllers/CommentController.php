@@ -24,7 +24,7 @@ class CommentController extends Controller
         
         return response()->json([
             'status' => 'success',
-            'articles' => $comments
+            'comments' => $comments
         ]);
     }
 
@@ -50,7 +50,7 @@ class CommentController extends Controller
         return response()->json([
             'status' => true,
             'message' => "Comment Added successfully!",
-            'article' => $comment
+            'comment' => $comment
         ], 201);
     }
 
@@ -98,7 +98,7 @@ class CommentController extends Controller
         return response()->json([
             'status' => true,
             'message' => "Comment Updated successfully!",
-            'article' => $comment
+            'comment' => $comment
         ], 200);
     }
 
