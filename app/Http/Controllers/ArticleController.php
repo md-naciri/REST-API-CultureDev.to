@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreArticleRequest;
+use App\Http\Resources\ArticleCollection;
+use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use Illuminate\Http\Request;
 
@@ -23,16 +25,20 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
+        // $articles = Article::all();
+        // return new ArticleCollection($articles);
         
         $filter = new ArticlesFilter();
         $queryItem = $filter->transform($request);
         if(count($queryItem) == 0){
-            return Article::all();
-
+            $articles = Article::all();
+            return new ArticleCollection($articles);
         } else {
-            return response()->json([
-                'article' => Article::where($queryItem)->join('categories','categories.id','=','articles.category_id')->get(),
-            ], 200);  //pour afficher nom de categorie
+            // return response()->json([
+                $articles = Article::where($queryItem)->get();
+                return new ArticleCollection($articles);
+                // 'article' => Article::where($queryItem)->join('categories','categories.id','=','articles.category_id')->get(),
+            // ], 200);  //pour afficher nom de categorie
             
             
 
@@ -63,12 +69,11 @@ class ArticleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Article $article)
-    {
-        $article->find($article->id);
+    {   
         if (!$article) {
             return response()->json(['message' => 'Article not found'], 404);
         }
-        return response()->json($article, 200);
+        return new ArticleResource($article);
     }
 
     /**
