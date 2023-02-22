@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreArticleRequest;
+use App\Http\Resources\ArticleCollection;
+use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use Illuminate\Http\Request;
 
@@ -21,12 +23,9 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::orderBy('id')->get();
+        $articles = Article::all();
 
-        return response()->json([
-            'status' => 'success',
-            'articles' => $articles
-        ]);
+        return new ArticleCollection($articles);
     }
 
     /**
@@ -53,12 +52,11 @@ class ArticleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Article $article)
-    {
-        $article->find($article->id);
+    {   
         if (!$article) {
             return response()->json(['message' => 'Article not found'], 404);
         }
-        return response()->json($article, 200);
+        return new ArticleResource($article);
     }
 
     /**
