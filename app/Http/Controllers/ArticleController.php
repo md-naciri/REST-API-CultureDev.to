@@ -8,6 +8,8 @@ use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use Illuminate\Http\Request;
 
+use App\Filters\ArticlesFilter;
+
 class ArticleController extends Controller
 {
 
@@ -21,11 +23,26 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::all();
+        // $articles = Article::all();
+        // return new ArticleCollection($articles);
+        
+        $filter = new ArticlesFilter();
+        $queryItem = $filter->transform($request);
+        if(count($queryItem) == 0){
+            $articles = Article::all();
+            return new ArticleCollection($articles);
+        } else {
+            // return response()->json([
+                $articles = Article::where($queryItem)->get();
+                return new ArticleCollection($articles);
+                // 'article' => Article::where($queryItem)->join('categories','categories.id','=','articles.category_id')->get(),
+            // ], 200);  //pour afficher nom de categorie
+            
+            
 
-        return new ArticleCollection($articles);
+        }
     }
 
     /**
@@ -102,4 +119,6 @@ class ArticleController extends Controller
             'message' => 'Article deleted successfully'
         ], 200);
     }
+
+    
 }
