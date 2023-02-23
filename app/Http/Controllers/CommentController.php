@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
+use Illuminate\Support\Facades\Auth;
+
 class CommentController extends Controller
 {
 
@@ -19,7 +21,7 @@ class CommentController extends Controller
     public function index()
     {
         $comments = Comment::orderBy('id')->get();
-        
+
         return response()->json([
             'status' => 'success',
             'comments' => $comments
@@ -44,7 +46,7 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        $comment = Comment::create($request->all());
+        $comment = Comment::create($request->all() + ['user_id' => Auth()->user()->id]);
         return response()->json([
             'status' => true,
             'message' => "Comment Added successfully!",
@@ -87,6 +89,13 @@ class CommentController extends Controller
      */
     public function update(StoreCommentRequest $request, Comment $comment)
     {
+        $user = Auth::user();
+        if(!$user->can('edit All comment')  && $user->id != $comment->user_id){
+            return response()->json([
+                'status' => false,
+                'message' => "You don't have permission to edit this comment!",
+            ], 200);
+        }
         $comment->update($request->all());
 
         if (!$comment) {
@@ -108,6 +117,13 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
+        $user = Auth::user();
+        if(!$user->can('edit All comment')  && $user->id != $comment->user_id){
+            return response()->json([
+                'status' => false,
+                'message' => "You don't have permission to delet this comment!",
+            ], 200);
+        }
         $comment->delete();
 
         if (!$comment) {

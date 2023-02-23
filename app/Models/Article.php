@@ -11,9 +11,9 @@ class Article extends Model
     protected $fillable = [
         'title',
         'description',
-        'content'
-        // 'user_id',
-        // 'category_id',
+        'content',
+        'user_id',
+        'category_id',
         // 'tag_id',
         // 'published_at'
     ];
@@ -32,5 +32,5 @@ class Article extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
-    
+
 }

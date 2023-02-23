@@ -6,13 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
 
     public function login(Request $request)
     {
@@ -74,6 +71,43 @@ class AuthController extends Controller
             'status' => 'success',
             'message' => 'Successfully logged out',
         ]);
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $validatedData =$request->validate([
+            'email' => 'required|string|email|max:255|exists:users',
+        ]);
+
+        $response = Password::sendResetLink($validatedData);
+
+        return $response == Password::RESET_LINK_SENT
+            ? response()->json(['success' => true])
+            : response()->json(['error' => 'Failed to send reset link'], 500);
+    }
+
+    public function resetpassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $response = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ]);
+
+                $user->save();
+            }
+        );
+
+        return $response == Password::PASSWORD_RESET
+            ? response()->json(['success' => true])
+            : response()->json(['error' => 'Failed to reset password'], 500);
     }
 
     public function refresh()
