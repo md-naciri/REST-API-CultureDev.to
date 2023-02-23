@@ -27,11 +27,10 @@ class ArticleController extends Controller
     {
         // $articles = Article::all();
         // return new ArticleCollection($articles);
-        
         $filter = new ArticlesFilter();
         $queryItem = $filter->transform($request);
         if(count($queryItem) == 0){
-            $articles = Article::all();
+            $articles = Article::orderBy('id')->get();
             return new ArticleCollection($articles);
         } else {
             // return response()->json([
@@ -39,9 +38,6 @@ class ArticleController extends Controller
                 return new ArticleCollection($articles);
                 // 'article' => Article::where($queryItem)->join('categories','categories.id','=','articles.category_id')->get(),
             // ], 200);  //pour afficher nom de categorie
-            
-            
-
         }
     }
 
