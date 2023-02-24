@@ -6,6 +6,7 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\ArticleCollection;
 use App\Models\Article;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 use App\Filters\ArticlesFilter;
@@ -35,16 +36,38 @@ class ArticleController extends Controller
             $articles = Article::orderBy('id')->get();
             return new ArticleCollection($articles);
         } else {
-            // return response()->json([
                 $articles = Article::where($queryItem)->get();
                 return new ArticleCollection($articles);
-                // 'article' => Article::where($queryItem)->join('categories','categories.id','=','articles.category_id')->get(),
-            // ], 200);  //pour afficher nom de categorie
 
 
 
         }
     }
+
+    public function filterCategory( $filter){
+
+      $article=Article::join("categories","categories.id","=","articles.category_id")
+                        ->where("name","=",$filter)->get();
+      return new ArticleCollection($article);
+
+    }
+
+
+    public function filterTag($filter){
+
+        $tag=Tag::with("articles")->where("name","=",$filter)->first();
+        return new ArticleCollection($tag->articles);
+  
+      }
+
+
+
+
+
+
+
+
+
 
     /**
      * Store a newly created resource in storage.
