@@ -26,4 +26,5 @@ class ArticleResource extends JsonResource
             'tags' => new TagCollection($this->tags)
         ];
     }
+    
 }

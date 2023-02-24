@@ -27,8 +27,6 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        // $articles = Article::all();
-        // return new ArticleCollection($articles);
 
         $filter = new ArticlesFilter();
         $queryItem = $filter->transform($request);
@@ -57,17 +55,8 @@ class ArticleController extends Controller
 
         $tag=Tag::with("articles")->where("name","=",$filter)->first();
         return new ArticleCollection($tag->articles);
-  
+
       }
-
-
-
-
-
-
-
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -77,7 +66,6 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        // return Auth()->user()->id;
         $article = Article::create($request->all() + ['user_id' => Auth()->user()->id])->tags()->attach($request->tags);
         return response()->json([
             'status' => true,
