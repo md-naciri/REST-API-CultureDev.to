@@ -9,6 +9,7 @@ use App\Models\Article;
 use Illuminate\Http\Request;
 
 use App\Filters\ArticlesFilter;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
@@ -27,6 +28,7 @@ class ArticleController extends Controller
     {
         // $articles = Article::all();
         // return new ArticleCollection($articles);
+
         $filter = new ArticlesFilter();
         $queryItem = $filter->transform($request);
         if(count($queryItem) == 0){
@@ -38,6 +40,9 @@ class ArticleController extends Controller
                 return new ArticleCollection($articles);
                 // 'article' => Article::where($queryItem)->join('categories','categories.id','=','articles.category_id')->get(),
             // ], 200);  //pour afficher nom de categorie
+
+
+
         }
     }
 
@@ -49,12 +54,11 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        $article = Article::create($request->all());
-
+        // return Auth()->user()->id;
+        $article = Article::create($request->all() + ['user_id' => Auth()->user()->id])->tags()->attach($request->tags);
         return response()->json([
             'status' => true,
             'message' => "Article Created successfully!",
-            'article' => $article
         ], 201);
     }
 
@@ -66,7 +70,6 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        // $article->find($article->id);
         if (!$article) {
             return response()->json(['message' => 'Article not found'], 404);
         }
@@ -83,6 +86,13 @@ class ArticleController extends Controller
      */
     public function update(StoreArticleRequest $request, Article $article)
     {
+        $user = Auth::user();
+        if(!$user->can('edit All article')  && $user->id != $article->user_id){
+            return response()->json([
+                'status' => false,
+                'message' => "You don't have permission to edit this article!",
+            ], 200);
+        }
         $article->update($request->all());
 
         if (!$article) {
@@ -104,6 +114,13 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
+        $user = Auth::user();
+        if(!$user->can('edit All article')  && $user->id != $article->user_id){
+            return response()->json([
+                'status' => false,
+                'message' => "You don't have permission to delete this article!",
+            ], 200);
+        }
         $article->delete();
 
         if (!$article) {
@@ -118,5 +135,5 @@ class ArticleController extends Controller
         ], 200);
     }
 
-    
+
 }

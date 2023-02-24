@@ -25,7 +25,6 @@ class StoreCommentRequest extends FormRequest
     {
         return [
             'content' => 'required',
-            'user_id' => 'required',
             'article_id' => 'required'
         ];
     }

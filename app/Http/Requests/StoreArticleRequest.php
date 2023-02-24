@@ -29,7 +29,7 @@ class StoreArticleRequest extends FormRequest
             'description' => 'required',
             'content' => 'required',
             // 'user_id' => 'required',
-            // 'category_id' => 'required',
+            'category_id' => 'required',
             // 'tag_id' => 'required',
             // 'published_at' => 'required|date',
         ];
