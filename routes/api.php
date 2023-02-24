@@ -72,4 +72,6 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(ArticleController::class)->group(function () {
     Route::get('/articles','index');
     Route::get('/articles/{article}','show');
+    Route::get('/articles/filter/category/{filter}','filterCategory');
+    Route::get('/articles/filter/tag/{filter}','filterTag');
 });

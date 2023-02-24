@@ -6,6 +6,7 @@ use App\Http\Requests\StoreArticleRequest;
 use App\Http\Resources\ArticleCollection;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 use App\Filters\ArticlesFilter;
@@ -35,8 +36,36 @@ class ArticleController extends Controller
         } else {
                 $articles = Article::where($queryItem)->get();
                 return new ArticleCollection($articles);
+
+
+
         }
     }
+
+    public function filterCategory( $filter){
+
+      $article=Article::join("categories","categories.id","=","articles.category_id")
+                        ->where("name","=",$filter)->get();
+      return new ArticleCollection($article);
+
+    }
+
+
+    public function filterTag($filter){
+
+        $tag=Tag::with("articles")->where("name","=",$filter)->first();
+        return new ArticleCollection($tag->articles);
+
+      }
+
+
+
+
+
+
+
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -82,7 +111,7 @@ class ArticleController extends Controller
                 'status' => false,
                 'message' => "You don't have permission to edit this article!",
             ], 200);
-        } 
+        }
         $article->update($request->all());
 
         if (!$article) {
