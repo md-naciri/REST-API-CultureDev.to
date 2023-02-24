@@ -19,10 +19,12 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
 
-        $addUser = 'add user';
-        $editUser = 'edit user';
-        $deleteUser = 'delete user';
-        $viewUser = 'view user';
+        $editMyProfil = 'edit my profil';
+        $editAllProfil = 'edit all profil';
+        $deleteMyProfil = 'delete my profil';
+        $deleteAllProfil = 'delete all profil';
+        $viewMyprofil = 'view my profil';
+        $viewAllprofil = 'view all profil';
 
         $addActicle = 'add article';
         $editAllActicle = 'edit All article';
@@ -46,10 +48,12 @@ class RolesAndPermissionsSeeder extends Seeder
         $deleteTag = 'delete tag';
         $viewTag = 'view tag';
 
-        Permission::create(['name' => $addUser]);
-        Permission::create(['name' => $editUser]);
-        Permission::create(['name' => $deleteUser]);
-        Permission::create(['name' => $viewUser]);
+        Permission::create(['name' => $editMyProfil]);
+        Permission::create(['name' => $editAllProfil]);
+        Permission::create(['name' => $deleteMyProfil]);
+        Permission::create(['name' => $deleteAllProfil]);
+        Permission::create(['name' => $viewMyprofil]);
+        Permission::create(['name' => $viewAllprofil]);
 
         Permission::create(['name' => $addActicle]);
         Permission::create(['name' => $editAllActicle]);
@@ -86,13 +90,19 @@ class RolesAndPermissionsSeeder extends Seeder
             $deleteMyActicle,
             $addComment,
             $editMyComment,
-            $deleteMyComment
+            $deleteMyComment,
+            $editMyProfil,
+            $deleteMyProfil,
+            $viewMyprofil,
         ]);
 
         Role::create(['name' => $user])->givePermissionTo([
             $addComment,
             $editMyComment,
-            $deleteMyComment
+            $deleteMyComment,
+            $editMyProfil,
+            $deleteMyProfil,
+            $viewMyprofil,
         ]);
     }
 }

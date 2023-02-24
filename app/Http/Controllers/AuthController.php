@@ -7,16 +7,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
+use App\Http\Requests\LoginAuthRequest;
+use App\Http\Requests\RegisterAuthRequest;
+use App\Http\Requests\ForgetPasswordAuthRequest;
+use App\Http\Requests\ResetPasswordAuthRequest;
 
 class AuthController extends Controller
 {
 
-    public function login(Request $request)
+    public function login(LoginAuthRequest $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
         $credentials = $request->only('email', 'password');
 
         $token = Auth::attempt($credentials);
@@ -38,14 +38,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register(RegisterAuthRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -73,27 +67,17 @@ class AuthController extends Controller
         ]);
     }
 
-    public function forgotPassword(Request $request)
+    public function forgotPassword(ForgetPasswordAuthRequest $request)
     {
-        $validatedData =$request->validate([
-            'email' => 'required|string|email|max:255|exists:users',
-        ]);
-
-        $response = Password::sendResetLink($validatedData);
+        $response = Password::sendResetLink($request->validated());
 
         return $response == Password::RESET_LINK_SENT
             ? response()->json(['success' => true])
             : response()->json(['error' => 'Failed to send reset link'], 500);
     }
 
-    public function resetpassword(Request $request)
+    public function resetpassword(ResetPasswordAuthRequest $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
         $response = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {

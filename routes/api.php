@@ -55,11 +55,10 @@ Route::controller(AuthController::class)->group(function () {
             Route::delete('/{article}', 'destroy')->middleware(['permission:delete All article|delete My article']);
         });
         Route::group(['controller' => UserController::class, 'prefix' => 'users'], function () {
-            Route::get('', 'index')->middleware(['permission:view user']);
-            Route::post('', 'store')->middleware(['permission:add user']);
-            Route::get('/{user}', 'show')->middleware(['permission:view user']);
-            Route::put('/{user}', 'update')->middleware(['permission:edit user']);
-            Route::delete('/{user}', 'destroy')->middleware(['permission:delete user']);
+            Route::get('', 'index')->middleware(['permission:view my profil|view all profil']);
+            Route::put('updateNameEmail/{user}', 'updateNameEmail')->middleware(['permission:edit my profil|edit all profil']);
+            Route::put('updatePassword/{user}', 'updatePassword')->middleware(['permission:edit my profil|edit all profil']);
+            Route::delete('/{user}', 'destroy')->middleware(['permission:delete my profil|delete all profil']);
         });
         // Route::apiResource('comments', CommentController::class);
         // Route::apiResource('category', CategoryController::class);

@@ -26,8 +26,6 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        // $articles = Article::all();
-        // return new ArticleCollection($articles);
 
         $filter = new ArticlesFilter();
         $queryItem = $filter->transform($request);
@@ -35,14 +33,8 @@ class ArticleController extends Controller
             $articles = Article::all();
             return new ArticleCollection($articles);
         } else {
-            // return response()->json([
                 $articles = Article::where($queryItem)->get();
                 return new ArticleCollection($articles);
-                // 'article' => Article::where($queryItem)->join('categories','categories.id','=','articles.category_id')->get(),
-            // ], 200);  //pour afficher nom de categorie
-
-
-
         }
     }
 
@@ -54,7 +46,6 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        // return Auth()->user()->id;
         $article = Article::create($request->all() + ['user_id' => Auth()->user()->id])->tags()->attach($request->tags);
         return response()->json([
             'status' => true,
@@ -91,7 +82,7 @@ class ArticleController extends Controller
                 'status' => false,
                 'message' => "You don't have permission to edit this article!",
             ], 200);
-        }
+        } 
         $article->update($request->all());
 
         if (!$article) {
