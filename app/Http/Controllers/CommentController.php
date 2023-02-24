@@ -9,35 +9,6 @@ use Illuminate\Support\Facades\Auth;
 class CommentController extends Controller
 {
 
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:api');
-    // }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $comments = Comment::orderBy('id')->get();
-
-        return response()->json([
-            'status' => 'success',
-            'comments' => $comments
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -67,17 +38,6 @@ class CommentController extends Controller
             return response()->json(['message' => 'Comment not found'], 404);
         }
         return response()->json($comment, 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comment $comment)
-    {
-
     }
 
     /**

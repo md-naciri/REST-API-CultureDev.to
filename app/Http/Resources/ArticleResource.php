@@ -23,4 +23,5 @@ class ArticleResource extends JsonResource
             'Comments' => new CommentCollection($this->comments)
         ];
     }
+    
 }

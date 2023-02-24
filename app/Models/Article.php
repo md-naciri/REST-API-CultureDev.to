@@ -13,14 +13,14 @@ class Article extends Model
         'description',
         'content',
         'user_id',
-        'category_id',
-        // 'tag_id',
-        // 'published_at'
+        'category_id'
     ];
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
+    
     public function category(){
         return $this->belongsTo(Category::class);
     }
